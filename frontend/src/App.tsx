@@ -1,7 +1,13 @@
 import { useState } from 'react';
+import { Login } from './components/Login';
 
 export function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [input, setInput] = useState('');
+
+  if (!isAuthenticated) {
+    return <Login onSuccess={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <main className="app">
