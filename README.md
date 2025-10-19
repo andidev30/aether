@@ -40,7 +40,7 @@ cp .env.example .env   # add Elastic/Vertex secrets or leave blank for heuristic
 npm run start:dev
 ```
 
-- Runs on `http://localhost:3001` (change via `PORT`).
+- Runs on `http://localhost:3001` (change via `APP_PORT`).
 - Health check: `GET /api/health`.
 - Audit endpoint: `POST /api/audit` with `{ "text": "LLM output" }`.
 
