@@ -1,0 +1,26 @@
+# Node dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.log
+
+# Vite cache
+.vite/
+
+# TypeScript
+*.tsbuildinfo
+
+# Testing artifacts
+coverage/
+
+# Environment files
+.env
+.env.*
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
