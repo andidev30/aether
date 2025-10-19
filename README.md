@@ -22,6 +22,25 @@ The server boots at `http://localhost:3000`. Health checks live at `GET /api/hea
 - `npm run test:watch` — watch tests.
 - `npm run test:cov` — collect coverage.
 
+### Elasticsearch Utilities
+
+Python tooling lives under `scripts/` for managing the Elastic evidence index.
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r scripts/requirements.txt
+export ELASTIC_URL=https://your-cluster.es.us-central1.gcp.elastic-cloud.com
+export ELASTIC_API_KEY=your_api_key
+python scripts/create_index.py
+```
+
+Available commands:
+- `create_index.py` — provision the evidence index with mappings.
+- `seed_index.py` — convert all `.txt` files under `scripts/example/` into documents and seed them.
+- `seed_index.py --files scripts/example/doc1_ai_hallucination_trust.txt` — seed a specific subset of example files.
+- `delete_index.py --force` — drop the index (requires explicit `--force`).
+
 ## Aether Frontend
 
 The frontend is a standalone Vite + React application that provides an audit console for testing the backend service.

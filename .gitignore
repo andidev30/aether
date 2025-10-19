@@ -15,6 +15,13 @@ build/
 # Testing artifacts
 coverage/
 
+# Python virtualenvs
+.venv/
+venv/
+scripts/aether/
+*.pyc
+__pycache__/
+
 # Environment files
 .env
 .env.*
@@ -24,3 +31,5 @@ coverage/
 Thumbs.db
 .idea/
 .vscode/
+
+.gcp-sa.json
