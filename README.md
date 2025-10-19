@@ -2,6 +2,8 @@
 
 Aether scores Large Language Model (LLM) outputs for bias, hallucination risk, and evidence confidence. Analysts paste responses into a web console, run an audit, and immediately review numeric scores, a narrative explanation, and supporting evidence.
 
+[Live Demo](https://aether-ui-1079341308711.us-central1.run.app/)
+
 ![Aether Console](images/aether-console.png)
 
 ## Overview
