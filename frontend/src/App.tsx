@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { Login } from './components/Login';
 import { runAudit, type AuditResponse } from './services/audit';
 
+const SAMPLE_LLM_OUTPUT = [
+  'The city of Metropolis has reduced its carbon emissions by 60% in the last five years alone.',
+  'Most residents now commute using autonomous electric shuttles that are powered entirely by solar energy.',
+  'Independent watchdogs have confirmed there have been zero power outages since the new grid went live.'
+].join(' ');
+
 export function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [input, setInput] = useState('');
@@ -29,6 +35,12 @@ export function App() {
     }
   };
 
+  const handleFillExample = () => {
+    setInput(SAMPLE_LLM_OUTPUT);
+    setResult(null);
+    setError(null);
+  };
+
   if (!isAuthenticated) {
     return <Login onSuccess={() => setIsAuthenticated(true)} />;
   }
@@ -52,14 +64,24 @@ export function App() {
           placeholder="Paste LLM output here..."
           rows={10}
         />
-        <button
-          type="button"
-          className="app__button"
-          disabled={!input.trim() || isLoading}
-          onClick={handleRunAudit}
-        >
-          {isLoading ? 'Running Audit…' : 'Run Audit'}
-        </button>
+        <div className="app__actions">
+          <button
+            type="button"
+            className="app__button app__button--secondary"
+            onClick={handleFillExample}
+            disabled={isLoading}
+          >
+            Fill With Example
+          </button>
+          <button
+            type="button"
+            className="app__button"
+            disabled={!input.trim() || isLoading}
+            onClick={handleRunAudit}
+          >
+            {isLoading ? 'Running Audit…' : 'Run Audit'}
+          </button>
+        </div>
 
         {error && <p className="app__status app__status--error">{error}</p>}
         {!error && isLoading && <p className="app__status">Evaluating output…</p>}
