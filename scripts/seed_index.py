@@ -28,7 +28,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument(
     "--index",
     type=str,
-    help="Override the index name (defaults to AETHER_ELASTIC_INDEX or aether_evidence)."
+    help="Override the index name (defaults to ELASTIC_INDEX or aether_evidence)."
   )
   return parser.parse_args()
 

@@ -1,6 +1,6 @@
 ## Aether Backend
 
-The backend is a NestJS 10 service that implements the audit pipeline described in `docs/technical_impmentation.md`. It exposes REST endpoints under the `api/` prefix.
+The backend is a NestJS 10 service that implements the audit pipeline described in `documentation/technical_impmentation.md`. It exposes REST endpoints under the `api/` prefix.
 
 ### Getting Started
 
@@ -11,6 +11,16 @@ npm run start:dev
 ```
 
 The server boots at `http://localhost:3000`. Health checks live at `GET /api/health`; the audit endpoint is `POST /api/audit`.
+
+### Configuration
+
+Copy `backend/.env.example` to `backend/.env` and populate the required secrets:
+
+- **Elastic Cloud** — `ELASTIC_URL`, `ELASTIC_API_KEY`, and (optionally) `ELASTIC_INDEX`.
+- **Vertex AI** — `VERTEX_PROJECT_ID`, `VERTEX_LOCATION`, `VERTEX_EMBEDDING_MODEL`, `VERTEX_MODERATION_MODEL`, and `GEMINI_MODEL`, plus `GOOGLE_APPLICATION_CREDENTIALS` pointing to a service-account JSON with Vertex permissions.
+- **Gemini** — handled through Vertex; choose the model via `GEMINI_MODEL` (e.g., `gemini-1.5-flash`).
+
+Without these values the services fall back to lightweight heuristics, which is useful for local prototyping but will not produce production-grade scores.
 
 ### Available Scripts
 
@@ -36,6 +46,7 @@ python scripts/create_index.py
 ```
 
 Available commands:
+
 - `create_index.py` — provision the evidence index with mappings.
 - `seed_index.py` — convert all `.txt` files under `scripts/example/` into documents and seed them.
 - `seed_index.py --files scripts/example/doc1_ai_hallucination_trust.txt` — seed a specific subset of example files.

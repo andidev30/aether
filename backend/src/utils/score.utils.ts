@@ -7,9 +7,10 @@ export type ScoreInput = {
   similarities: SimilarityResult[];
 };
 
-const SIMILARITY_THRESHOLD = 0.75;
-
-export function calculateScores({ biasScore, similarities }: ScoreInput) {
+export function calculateScores(
+  { biasScore, similarities }: ScoreInput,
+  similarityThreshold = 0.75
+) {
   if (similarities.length === 0) {
     return {
       biasScore,
@@ -19,8 +20,9 @@ export function calculateScores({ biasScore, similarities }: ScoreInput) {
   }
 
   const similarityValues = similarities.map((item) => item.similarity);
-  const averageSimilarity = similarityValues.reduce((sum, value) => sum + value, 0) / similarities.length;
-  const supportingSources = similarityValues.filter((value) => value >= SIMILARITY_THRESHOLD).length;
+  const averageSimilarity =
+    similarityValues.reduce((sum, value) => sum + value, 0) / similarities.length;
+  const supportingSources = similarityValues.filter((value) => value >= similarityThreshold).length;
 
   return {
     biasScore,

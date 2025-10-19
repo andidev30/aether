@@ -4,11 +4,11 @@ import { HealthController } from '@/controllers/health.controller';
 import { AuditService } from '@/services/audit.service';
 import { VertexService } from '@/services/vertex.service';
 import { ElasticService } from '@/services/elastic.service';
-import { GeminiService } from '@/services/gemini.service';
+import { ConfigService } from '@/config/config.service';
 
 @Module({
   controllers: [AuditController, HealthController],
-  providers: [AuditService, VertexService, ElasticService, GeminiService],
+  providers: [ConfigService, AuditService, VertexService, ElasticService],
   exports: [AuditService]
 })
 export class AuditModule {}

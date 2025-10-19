@@ -1,7 +1,5 @@
 import os
 from pathlib import Path
-from typing import Optional
-
 from dotenv import load_dotenv, find_dotenv
 from elasticsearch import Elasticsearch
 
@@ -28,20 +26,17 @@ def build_client() -> Elasticsearch:
   """Create an Elasticsearch client using environment variables."""
   url = os.getenv("ELASTIC_URL")
   api_key = os.getenv("ELASTIC_API_KEY")
-  ca_certs: Optional[str] = os.getenv("ELASTIC_CA_CERT")
 
   if not url:
     url = "http://localhost:9200"
     print("Warning: ELASTIC_URL not set. Defaulting to http://localhost:9200", flush=True)
 
-  kwargs = {"ca_certs": ca_certs} if ca_certs else {}
-
   if api_key:
-    return Elasticsearch(url, api_key=api_key, **kwargs)
+    return Elasticsearch(url, api_key=api_key)
 
   if url.startswith("https://"):
     raise RuntimeError(
       "ELASTIC_API_KEY must be set when connecting to Elastic Cloud over HTTPS."
     )
 
-  return Elasticsearch(url, **kwargs)
+  return Elasticsearch(url)
