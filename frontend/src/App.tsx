@@ -1,9 +1,33 @@
 import { useState } from 'react';
 import { Login } from './components/Login';
+import { runAudit, type AuditResponse } from './services/audit';
 
 export function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<AuditResponse | null>(null);
+
+  const handleRunAudit = async () => {
+    if (!input.trim() || isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const data = await runAudit({ text: input.trim() });
+      setResult(data);
+    } catch (auditError) {
+      const message = auditError instanceof Error ? auditError.message : 'Unknown audit error';
+      setError(message);
+      setResult(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!isAuthenticated) {
     return <Login onSuccess={() => setIsAuthenticated(true)} />;
@@ -28,10 +52,77 @@ export function App() {
           placeholder="Paste LLM output here..."
           rows={10}
         />
-        <button type="button" className="app__button" disabled={!input.trim()}>
-          Run Audit
+        <button
+          type="button"
+          className="app__button"
+          disabled={!input.trim() || isLoading}
+          onClick={handleRunAudit}
+        >
+          {isLoading ? 'Running Audit…' : 'Run Audit'}
         </button>
+
+        {error && <p className="app__status app__status--error">{error}</p>}
+        {!error && isLoading && <p className="app__status">Evaluating output…</p>}
       </section>
+
+      {result && !isLoading && (
+        <section className="app__results" aria-live="polite">
+          <h2 className="app__results-title">Audit Results</h2>
+          <div className="app__metrics">
+            <div className="metric">
+              <span className="metric__label">Bias Score</span>
+              <span className="metric__value">{result.bias_score.toFixed(2)}</span>
+            </div>
+            <div className="metric">
+              <span className="metric__label">Hallucination Score</span>
+              <span className="metric__value">{result.hallucination_score.toFixed(2)}</span>
+            </div>
+            <div className="metric">
+              <span className="metric__label">Source Confidence</span>
+              <span className="metric__value">{result.source_confidence.toFixed(2)}</span>
+            </div>
+          </div>
+
+          <article className="app__explanation">
+            <h3>Automated Summary</h3>
+            <p>{result.gemini_explanation}</p>
+          </article>
+
+          <section className="app__evidence">
+            <h3>Supporting Evidence</h3>
+            {result.evidence.length === 0 ? (
+              <p className="app__status">No relevant documents found for this input.</p>
+            ) : (
+              <ul className="evidence-list">
+                {result.evidence.map((item) => (
+                  <li key={item.id} className="evidence-list__item">
+                    <header className="evidence-list__header">
+                      <span className="evidence-list__title">{item.title}</span>
+                      <span className="evidence-list__badge">Similarity {item.similarity.toFixed(2)}</span>
+                    </header>
+                    {item.summary && <p className="evidence-list__summary">{item.summary}</p>}
+                    <footer className="evidence-list__footer">
+                      {item.source_url && (
+                        <a
+                          href={item.source_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="evidence-list__link"
+                        >
+                          View source
+                        </a>
+                      )}
+                      {item.published_at && (
+                        <span className="evidence-list__meta">Published: {item.published_at}</span>
+                      )}
+                    </footer>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </section>
+      )}
     </main>
   );
 }

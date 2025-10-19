@@ -66,6 +66,12 @@ npm run dev
 
 The dev server runs on `http://localhost:5173` and automatically reloads on file changes.
 
+To connect to the Nest backend during development, create `frontend/.env` and set:
+
+```
+VITE_BACKEND_URL=http://localhost:3000
+```
+
 ### Available Scripts
 
 - `npm run dev` — start the Vite development server.
